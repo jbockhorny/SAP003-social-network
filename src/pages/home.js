@@ -34,40 +34,50 @@ function publish() {
   });
   return post;
 }
+
 function logout() {
-  firebase.auth()
+  firebase
+    .auth()
     .signOut()
     .then(() => {
       window.location = '#login';
     });
 }
+
 function deletePost(event) {
   const id = event.target.dataset.id;
-  firebase.firestore().collection('posts').doc(id).delete();
+  firebase
+    .firestore()
+    .collection('posts')
+    .doc(id)
+    .delete();
   event.target.parentElement.remove();
 }
-function saveEdit(postId) {
-  const id = postId;
-  console.log(id);
+
+function saveEdit(event) {
+  const id = event.target.dataset.id;
   const textAreaEdit = document.querySelector('.edit-textArea');
-  const text = document.querySelector('.p-text');
-  text.innerHTML = `
-  <p class = 'p-text'> ${textAreaEdit.value} </p>
-  `;
-  firebase.firestore().collection('posts').doc(id).update({
-    text: textAreaEdit,
-  });
+  firebase
+    .firestore()
+    .collection('posts')
+    .doc(id)
+    .update({
+      text: textAreaEdit.value,
+    });
+  window.home.loadPost();
 }
 
-function editPost() {
-  const text = document.querySelector('.p-text');
-  text.innerHTML = ` 
+function editPost(event) {
+  const postId = event.target.dataset.id;
+  const postText = document.getElementById(postId).querySelector('.p-text').innerHTML;
+  const postArea = document.getElementById(postId);
+  postArea.innerHTML = ` 
   ${window.textarea.component({
     class: 'edit-textArea',
-    id: 'dataId',
-    value: text,
+    text: postText,
   })}
   ${window.button.component({
+    dataId: postId,
     id: 'edit-button',
     title: 'Editar',
     call: window.home.saveEdit,
@@ -78,12 +88,12 @@ function feed() {
   const template = `
   <p>${firebase.auth().currentUser.displayName}</p>
 <img src="../../imagens/logo.png"></img class="image-logo">
-${Textarea({ id: 'post', class: 'post' })}
-${Button({ id: 'publish', title: 'Publish', call: publish })}
+${Textarea({ class: 'post' })}
+${Button({ id: 'publish', title: 'Publicar', call: publish })}
 <div class ='post-public'>
 <ul class='post-ul'>
 </ul>
-${Button({ id: 'logout', title: 'logout', call: logout })}
+${Button({ id: 'logout', title: 'Sair', call: logout })}
 </div>
 `;
   return template;
@@ -91,19 +101,26 @@ ${Button({ id: 'logout', title: 'logout', call: logout })}
 
 function addPost(post, postId) {
   const postTemplate = `
+  <li id='${postId}' class='post-li'>
   <div>
-<li data-id='${postId}' class='post-li'>
-${post.timestamp.toDate().toLocaleString('pt-BR')}: </br >
-<p class = 'p-text'> ${post.text} </p> </br >
-🏆 ${post.likes}
-</li>
+    ${post.timestamp.toDate().toLocaleString('pt-BR')}:
+    <p class = 'p-text'> ${post.text} </p>
+    🏆 ${post.likes} 
+  </div>
+  <div>
+    ${window.button.component({
+    dataId: postId,
+    title: 'Deletar',
+    call: window.home.deletePost,
+  })}
+    ${window.button.component({
+    dataId: postId,
+    title: 'Editar',
+    call: window.home.editPost,
+  })}
 </div>
-<div>
-${window.button.component({ dataId: postId, title: 'deletar', call: window.home.deletePost })
-}
-${window.button.component({ dataId: postId, title: 'editar', call: window.home.editPost })
-}
-</div>`;
+</li>
+`;
   return postTemplate;
 }
 

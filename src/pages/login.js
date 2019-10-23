@@ -27,18 +27,18 @@ function google() {
     .auth()
     .signInWithPopup(provider)
     .then((result) => {
-      const token = result.credential.accessToken;
-      const user = result.user;
+      // const token = result.credential.accessToken;
+      // const user = result.user;
       if (result) {
-        location.hash = '#feed';
+        window.location.hash = '#feed';
       }
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.email;
-      const credential = error.credential;
     });
+  // .catch((error) => {
+  // const errorCode = error.code;
+  // const errorMessage = error.message;
+  // const email = error.email;
+  // const credential = error.credential;
+  // });
 }
 
 function TemplateLogin() {
