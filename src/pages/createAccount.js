@@ -12,9 +12,11 @@ function newUser() {
       response.user.updateProfile({
         displayName: name,
       });
-      if (response) {
-        window.location.hash = '#feed';
-      }
+      window.location.hash = '#login';
+      const user = firebase.auth().currentUser;
+      user.sendEmailVerification().then(() => {
+      }).catch(() => {
+      });
     })
     .catch((error) => {
       const errorMessage = error.message;
@@ -32,13 +34,16 @@ function newUserTemplate() {
     placeholder: 'password',
     type: 'password',
   })}
-  ${Button({ id: 'bt-creat-account', title: 'criar a conta', call: newUser })}
+  ${Button({
+    id: 'bt-creat-account', title: 'criar a conta', class: 'oval-button', call: newUser,
+  })}
   </form>
   `;
 
   const template = `
-  <img src="img/moviment.png" alt="Logo do Moviment" class="image-logo">
-  <h4 class="text-main">Bem vinda(o), Moviment! Para se cadastrar, preencha as informações</h4>
+  <img src="../../imagens/logo.png" alt="Logo do Moviment" class="image-logo">
+  <h3class='text-creactaccount'>Bem vinda(o), Movement!</h3class='text-creactaccount'></h3>
+  <h4 class ='text-creataccount'>Para se cadastrar, preencha as informações</h4>
   ${inNewUser}
   `;
 

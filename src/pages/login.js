@@ -27,23 +27,19 @@ function google() {
     .auth()
     .signInWithPopup(provider)
     .then((result) => {
-      // const token = result.credential.accessToken;
-      // const user = result.user;
       if (result) {
         window.location.hash = '#feed';
       }
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      alert(errorMessage);
     });
-  // .catch((error) => {
-  // const errorCode = error.code;
-  // const errorMessage = error.message;
-  // const email = error.email;
-  // const credential = error.credential;
-  // });
 }
 
 function TemplateLogin() {
   const template = `
-    <img src="img/moviment.png" alt="Logo do Moviment" class="image">
+    <img src="../../imagens/logo.png" alt="Logo do Moviment" class="image">
     <h4 class="text-main">Bem vinda, Moviment!</h4>
     <form class="form-login">
       ${Input({
@@ -56,12 +52,16 @@ function TemplateLogin() {
     placeholder: 'password',
     type: 'password',
   })}
-      ${Button({ id: 'bt-login', title: 'Login', call: login })}
+      ${Button({
+    id: 'bt-login', class: 'oval-button', title: 'Log in', call: login,
+  })}
     </form>
-    <p class="text-main">Pode acessar também com...</p>
-    ${Button({ id: 'bt-google', title: '<i class="fab fa-google"></i> Google', call: google })}
+    <p class="text-main">Acesse também usando:</p>
+    ${Button({
+    id: 'bt-google', title: '<i class="fab fa-google"></i>', class: 'circle-button', call: google,
+  })}
    
-    <p class="text-main"><a href="#createAccount">Não tem uma conta?</a></p>
+    <p class="text-main">Não tem uma conta? <a href="#createAccount">Crie aqui sua conta!</a></p>
   `;
 
   window.location.hash = '#login';

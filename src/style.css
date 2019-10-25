@@ -1,53 +1,134 @@
-main{
+html{
+  font-size: 10px;
+}
+body{
+  font-size: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
+  background: rosybrown;
+}
+main{
+  display: flex;
   width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  background: saddlebrown;
 }
-.primary-button {
+.header-feed{
+  background-color: aqua;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: left;
+}
+.display-name{
+  display: flex;
+  margin: 4rem;
+  background-color: hotpink;
+}
+
+.oval-button {
   background-color: #24BF67;
-  padding: 5px;
-  width: 70px;
-  font-size: 0.7rem;
-  font-weight: bold;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
-<<<<<<< HEAD
-<<<<<<< HEAD
   align-items: center;
-=======
->>>>>>> 1fdc5cbbeddd1e79ffbb7cda947d16f8b48909a8
-=======
-  margin: 5px;
->>>>>>> f33f6d61f8115513ef2d42111294b5c96f96b6ac
+  margin: 1rem;
+  border-radius: 2rem;
+  padding: 0.5rem 2rem;
 }
-.textarea-local{
-  margin-top: 10px;
+.circle-button{
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1.5rem;
+  border: none;
+  line-height: 3rem;
+}
+.exit-button{
+  border: none;
+  cursor: pointer;
   align-items: center;
+  margin: 5px;
+  border-radius: 2rem;
+  padding: 0.5rem 2rem;
+  text-align: right;
+  display: flex;
 }
 .form-login{
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 5px;
+  margin: 0.5rem;
 }
 .form-login input{
-  margin: 5px;
+  margin: 0.5rem;
   text-align: center;
+  border-radius: 1rem;
 }
-.form-login button{
-  margin: 5px;
-  text-align: center;
-}
+
 .text-main{
   text-align: center;
+  font-size: 1.5rem;
 }
 .image-logo{
   align-items: center;
 }
 .post-li{
+  display: flex;
+  width: 90%;
   margin-top: 5px;
+  flex-grow: 1;
   text-align: center;
+  list-style-type: none;
+  background: seagreen;
+}
+.post-text{
+  background-color: slateblue;
+  text-align: center;
+}
+.post-time{
+  background-color: yellow;
+}
+
+.feed-avatar{
+  border-radius: 50%; 
+}
+.post-avatar{
+  border-radius: 50%; 
+  margin-top: 1rem;
+}
+.post-layout{
+  background-color: tomato;
+
+}
+.textarea-local{
+  display: flex;
+  width: 85%;
+  flex-grow: 1;
+  resize: none;
+  margin: 1rem;
+  background: lightcoral;
+}
+.textarea-post{
+  display: flex;
+  margin: 2rem 2rem 2rem 2rem;
+  width: 85%;
+  flex-grow: 1;
+  resize: none;
+  background: indigo;
+}
+.post-textarea{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.post-displayname{
+  display: flex;
+  margin: 4rem;
+  background: darkred;
 }

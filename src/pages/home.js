@@ -1,28 +1,13 @@
 import Button from '../components/button.js';
 import Textarea from '../components/textarea.js';
 
-function loadPost() {
-  const postColletion = firebase
-    .firestore()
-    .collection('posts')
-    .where('user', '==', window.user.uid);
-  const postList = document.querySelector('.post-ul');
-  postColletion.get().then((snap) => {
-    postList.innerHTML = '';
-    snap.forEach((post) => {
-      postList.innerHTML += addPost(post.data(), post.id);
-    });
-  });
-}
-
 function publish() {
-  const textArea = document.querySelector('.post');
+  const textArea = document.querySelector('.textarea-post');
   const fieldValue = firebase.firestore.FieldValue;
   const id = firebase.auth().currentUser.uid;
   const post = {
     user: id,
     text: textArea.value,
-    likes: 0,
     coments: [],
     timestamp: fieldValue.serverTimestamp(),
   };
@@ -52,11 +37,12 @@ function deletePost(event) {
     .doc(id)
     .delete();
   event.target.parentElement.remove();
+  window.home.loadPost();
 }
 
 function saveEdit(event) {
   const id = event.target.dataset.id;
-  const textAreaEdit = document.querySelector('.edit-textArea');
+  const textAreaEdit = document.querySelector('.edit-textarea');
   firebase
     .firestore()
     .collection('posts')
@@ -69,32 +55,51 @@ function saveEdit(event) {
 
 function editPost(event) {
   const postId = event.target.dataset.id;
-  const postText = document.getElementById(postId).querySelector('.p-text').innerHTML;
+  const postText = document.getElementById(postId).querySelector('.post-text')
+    .innerHTML;
   const postArea = document.getElementById(postId);
   postArea.innerHTML = ` 
   ${window.textarea.component({
-    class: 'edit-textArea',
+    class: 'edit-textarea',
     text: postText,
   })}
   ${window.button.component({
     dataId: postId,
     id: 'edit-button',
-    title: 'Editar',
+    class: 'oval-button ',
+    title: 'Salvar',
     call: window.home.saveEdit,
   })} `;
 }
 
 function feed() {
   const template = `
-  <p>${firebase.auth().currentUser.displayName}</p>
-<img src="../../imagens/logo.png"></img class="image-logo">
-${Textarea({ class: 'post' })}
-${Button({ id: 'publish', title: 'Publicar', call: publish })}
-<div class ='post-public'>
-<ul class='post-ul'>
-</ul>
-${Button({ id: 'logout', title: 'Sair', call: logout })}
-</div>
+  <header class = 'header-feed'>
+  <img class="image-logo" src="../../imagens/movement-green-text.png"></img>
+  ${Button({
+    id: 'logout',
+    title: '<i class="fas fa-sign-out-alt"></i>',
+    class: 'exit-button',
+    call: logout,
+  })}
+  </header>
+  <div class = 'display-name'>
+    <img src='http://unsplash.it/70/70/?=sport' class='feed-avatar'></img>
+    ${firebase.auth().currentUser.displayName}
+  </div>
+  <div class = 'post-layout'>
+  ${Textarea({ class: 'textarea-post' })}
+  ${Button({
+    id: 'publish',
+    title: 'Publicar',
+    class: 'oval-button',
+    call: publish,
+  })}
+  </div>
+  <div class ='post-public'>
+    <ul class='post-ul'>
+    </ul>
+  </div>
 `;
   return template;
 }
@@ -102,20 +107,27 @@ ${Button({ id: 'logout', title: 'Sair', call: logout })}
 function addPost(post, postId) {
   const postTemplate = `
   <li id='${postId}' class='post-li'>
-  <div>
-    ${post.timestamp.toDate().toLocaleString('pt-BR')}:
-    <p class = 'p-text'> ${post.text} </p>
-    🏆 ${post.likes} 
+  <div class = 'post-displayname'>
+    <img src='http://unsplash.it/50/50/?=sport' class='post-avatar'></img>
+    ${firebase.auth().currentUser.displayName}
   </div>
-  <div>
+  <div class= 'post-textarea'>
+   <p class = 'post-time'>
+   ${post.timestamp.toDate().toLocaleString('pt-BR')}:
+   </p>
+    <p class = 'post-text'> ${post.text} </p>
+  </div>
+  <div class = 'post-button'>
     ${window.button.component({
     dataId: postId,
-    title: 'Deletar',
+    title: '',
+    class: 'circle-button far fa-trash-alt',
     call: window.home.deletePost,
   })}
     ${window.button.component({
     dataId: postId,
-    title: 'Editar',
+    class: 'circle-button far fa-edit',
+    title: '',
     call: window.home.editPost,
   })}
 </div>
@@ -123,7 +135,19 @@ function addPost(post, postId) {
 `;
   return postTemplate;
 }
-
+function loadPost() {
+  const postColletion = firebase
+    .firestore()
+    .collection('posts')
+    .where('user', '==', window.user.uid);
+  const postList = document.querySelector('.post-ul');
+  postColletion.get().then((snap) => {
+    postList.innerHTML = '';
+    snap.forEach((post) => {
+      postList.innerHTML += addPost(post.data(), post.id);
+    });
+  });
+}
 export default feed;
 
 window.home = {
