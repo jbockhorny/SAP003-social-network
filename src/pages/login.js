@@ -8,14 +8,21 @@ function login() {
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
-    .then((response) => {
+    .then(response => {
+      const user = {
+        displayName: response.user.displayName
+      };
+      const usersCollection = firebase.firestore().collection('users');
+      usersCollection.doc(response.user.uid).set(user);
+
       window.user = {
+        displayName: response.user.displayName,
         email: response.user.email,
-        uid: response.user.uid,
+        uid: response.user.uid
       };
       window.location.hash = '#feed';
     })
-    .catch((error) => {
+    .catch(error => {
       const errorMessage = error.message;
       alert(errorMessage);
     });
@@ -26,12 +33,16 @@ function google() {
   firebase
     .auth()
     .signInWithPopup(provider)
-    .then((result) => {
-      if (result) {
-        window.location.hash = '#feed';
-      }
+    .then(response => {
+      window.user = {
+        displayName: response.user.displayName,
+        email: response.user.email,
+        uid: response.user.uid
+      };
+      
+      window.location.hash = '#feed';
     })
-    .catch((error) => {
+    .catch(error => {
       const errorMessage = error.message;
       alert(errorMessage);
     });
@@ -39,29 +50,44 @@ function google() {
 
 function TemplateLogin() {
   const template = `
-    <img src="../../imagens/logo.png" alt="Logo do Moviment" class="image">
-    <h4 class="text-main">Bem vinda, Moviment!</h4>
-    <form class="form-login">
-      ${Input({
-    class: 'js-email-input',
-    placeholder: 'e-mail',
-    type: 'email',
-  })}
-      ${Input({
-    class: 'js-password-input',
-    placeholder: 'password',
-    type: 'password',
-  })}
-      ${Button({
-    id: 'bt-login', class: 'oval-button', title: 'Log in', call: login,
-  })}
-    </form>
-    <p class="text-main">Acesse também usando:</p>
-    ${Button({
-    id: 'bt-google', title: '<i class="fab fa-google"></i>', class: 'circle-button', call: google,
-  })}
-   
-    <p class="text-main">Não tem uma conta? <a href="#createAccount">Crie aqui sua conta!</a></p>
+    <div class="login">
+      <div class='login-content'>
+        <div>
+          <img src="../../imagens/logo.png" alt="Logo do Moviment" class="login-logo">
+          <h4 class="text-main">Bem vindo(a), atleta!</h4>
+        </div>
+        <div class='login-form'>
+          <form class='form-login'>
+            ${Input({
+              class: 'js-email-input',
+              placeholder: 'Email',
+              type: 'email'
+            })}
+            ${Input({
+              class: 'js-password-input',
+              placeholder: 'Senha',
+              type: 'password'
+            })}
+            ${Button({
+              id: 'bt-login',
+              class: '',
+              title: 'Entrar',
+              call: login
+            })}
+          </form>
+        </div>
+        <div>
+          <p class='text-main'>Acesse também usando:</p>
+          ${Button({
+            id: 'bt-google',
+            title: '<i class=""></i>',
+            class: 'circle-button fab fa-google',
+            call: google
+          })}
+          <p class="text-main">Não tem uma conta? <a href="#createAccount">Criar conta!</a></p>
+        </div>
+      </div>
+    </div>
   `;
 
   window.location.hash = '#login';
