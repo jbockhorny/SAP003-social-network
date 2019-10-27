@@ -1,41 +1,33 @@
 import Button from '../components/button.js';
 import Textarea from '../components/textarea.js';
 
-function loadPost() {
-  const postColletion = firebase
-    .firestore()
-    .collection('posts')
-    .where('user', '==', window.user.uid);
-  const postList = document.querySelector('.post-ul');
-  postColletion.get().then((snap) => {
-    postList.innerHTML = '';
-    snap.forEach((post) => {
-      postList.innerHTML += addPost(post.data(), post.id);
-    });
-  });
-}
-
 function publish() {
-  const textArea = document.querySelector('.post');
+  const textArea = document.querySelector('.textarea-post');
+
+  if (!textArea.value) {
+    alert('Digite uma mensagem!');
+    return;
+  }
+
   const fieldValue = firebase.firestore.FieldValue;
-  const id = firebase.auth().currentUser.uid;
+  const currentUser = firebase.auth().currentUser;
   const post = {
-    user: id,
+    user: currentUser.uid,
+    displayName: currentUser.displayName || currentUser.email,
     text: textArea.value,
-    likes: 0,
     coments: [],
-    timestamp: fieldValue.serverTimestamp(),
+    timestamp: fieldValue.serverTimestamp()
   };
-  const postColletion = firebase.firestore().collection('posts');
-  postColletion.add(post).then(() => {
+  const postCollection = firebase.firestore().collection('posts');
+  postCollection.add(post).then(() => {
     textArea.value = '';
     window.home.loadPost();
-    postColletion.get();
   });
   return post;
 }
 
 function logout() {
+  window.user = undefined;
   firebase
     .auth()
     .signOut()
@@ -52,78 +44,142 @@ function deletePost(event) {
     .doc(id)
     .delete();
   event.target.parentElement.remove();
+  window.home.loadPost();
 }
 
 function saveEdit(event) {
   const id = event.target.dataset.id;
-  const textAreaEdit = document.querySelector('.edit-textArea');
+  const textAreaEdit = document.querySelector('.edit-textarea');
+
+  if (!textAreaEdit.value) {
+    alert('Digite uma mensagem!');
+    return;
+  }
+
   firebase
     .firestore()
     .collection('posts')
     .doc(id)
     .update({
-      text: textAreaEdit.value,
+      text: textAreaEdit.value
     });
   window.home.loadPost();
 }
 
 function editPost(event) {
   const postId = event.target.dataset.id;
-  const postText = document.getElementById(postId).querySelector('.p-text').innerHTML;
-  const postArea = document.getElementById(postId);
-  postArea.innerHTML = ` 
+  event.target.disabled = true;
+  const postContent = document
+    .getElementById(postId)
+    .querySelector('.post-content');
+  postContent.innerHTML = ` 
   ${window.textarea.component({
-    class: 'edit-textArea',
-    text: postText,
+    class: 'edit-textarea',
+    text: postContent.innerHTML
   })}
   ${window.button.component({
     dataId: postId,
     id: 'edit-button',
-    title: 'Editar',
-    call: window.home.saveEdit,
+    class: 'oval-button ',
+    title: 'Salvar',
+    call: window.home.saveEdit
   })} `;
 }
 
 function feed() {
   const template = `
-  <p>${firebase.auth().currentUser.displayName}</p>
-<img src="../../imagens/logo.png"></img class="image-logo">
-${Textarea({ class: 'post' })}
-${Button({ id: 'publish', title: 'Publicar', call: publish })}
-<div class ='post-public'>
-<ul class='post-ul'>
-</ul>
-${Button({ id: 'logout', title: 'Sair', call: logout })}
-</div>
+  <header>
+    <div class='logo-header'>
+      <img class='image-logo' src='../../imagens/movement-white-text.png'></img>
+    </div>
+    <div class='menu-right'>
+      ${Button({
+        id: 'logout',
+        title: '',
+        class: 'circle-button fas fa-sign-out-alt',
+        call: logout
+      })}
+    </div>
+  </header>
+  <div>
+    <div class='main-content'>
+      <div class='user-info'>
+        <div class='avatar'>
+          <img src='https://source.unsplash.com/70x70/?person,${window.user.uid}' />
+          ${window.user.displayName}<br />
+        </div>
+      </div>
+      <div class='feed'>
+        <div class='post-layout'>
+          ${Textarea({ class: 'textarea-post' })}
+          ${Button({
+            id: 'publish',
+            title: 'Publicar',
+            class: '',
+            call: publish
+          })}
+        </div>
+        <div class='post-list'>
+          <ul class='post-ul'>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 `;
   return template;
+}
+
+function getActions(post, postId) {
+  const currentUserId = firebase.auth().currentUser.uid;
+
+  if (currentUserId === post.user) {
+    return (
+      window.button.component({
+        dataId: postId,
+        class: 'transparent-button far fa-edit',
+        title: '',
+        call: window.home.editPost
+      }) +
+      window.button.component({
+        dataId: postId,
+        title: '',
+        class: 'transparent-button far fa-trash-alt',
+        call: window.home.deletePost
+      })
+    );
+  } else {
+    return '';
+  }
 }
 
 function addPost(post, postId) {
   const postTemplate = `
   <li id='${postId}' class='post-li'>
-  <div>
-    ${post.timestamp.toDate().toLocaleString('pt-BR')}:
-    <p class = 'p-text'> ${post.text} </p>
-    🏆 ${post.likes} 
-  </div>
-  <div>
-    ${window.button.component({
-    dataId: postId,
-    title: 'Deletar',
-    call: window.home.deletePost,
-  })}
-    ${window.button.component({
-    dataId: postId,
-    title: 'Editar',
-    call: window.home.editPost,
-  })}
-</div>
-</li>
+    <div class='post-header'>
+      <div class='post-header-user'>
+        <img src='https://source.unsplash.com/70x70/?person,${post.user}'></img>
+        ${post.displayName || 'Anônimo'} | ${post.timestamp.toDate().toLocaleString('pt-BR')}
+      </div>
+      <div class='post-header-button'>
+        ${window.home.getActions(post, postId)}
+      </div>
+    </div>
+    <div class='post-content'>${post.text}</div>
+  </li>
 `;
   return postTemplate;
 }
-
+function loadPost() {
+  const postCollection = firebase.firestore().collection('posts');
+  const postList = document.querySelector('.post-ul');
+  postCollection.orderBy('timestamp', 'desc').get().then(snap => {
+    postList.innerHTML = '';
+    snap.forEach(post => {
+      postList.innerHTML += addPost(post.data(), post.id);
+    });
+  });
+}
 export default feed;
 
 window.home = {
@@ -132,4 +188,5 @@ window.home = {
   loadPost,
   saveEdit,
   addPost,
+  getActions
 };

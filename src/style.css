@@ -1,53 +1,180 @@
-main{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Ubuntu', sans-serif;
 }
-.primary-button {
-  background-color: #24BF67;
-  padding: 5px;
-  width: 70px;
-  font-size: 0.7rem;
-  font-weight: bold;
+html {
+  font-size: 10px;
+}
+body {
+  font-size: 16px;
+}
+button {
   border: none;
-  border-radius: 10px;
   cursor: pointer;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  align-items: center;
-=======
->>>>>>> 1fdc5cbbeddd1e79ffbb7cda947d16f8b48909a8
-=======
-  margin: 5px;
->>>>>>> f33f6d61f8115513ef2d42111294b5c96f96b6ac
+  height: 3rem;
+  border-radius: 1.5rem;
+  padding: 0.5rem 2rem;
 }
-.textarea-local{
-  margin-top: 10px;
-  align-items: center;
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  height: 3rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
 }
-.form-login{
+textarea {
+  resize: none;
+}
+p {
+  padding: 1.5rem;
+}
+header {
+  background-color: darkgreen;
   display: flex;
-  flex-direction: column;
+  height: 6rem;
+  padding: 1rem;
+}
+.menu-right {
+  flex: 1;
+  text-align: right;
+}
+.circle-button {
+  width: 3rem;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0;
+}
+.transparent-button {
+  background: transparent;
+}
+.main-content {
+  display: flex;
+  padding: 2rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.user-info {
+  width: 30rem;
+  padding-right: 10px;
+}
+.user-info .avatar {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+.user-info .avatar *,
+.post-li .post-header-user * {
+  vertical-align: middle;
+}
+.user-info .avatar img {
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+.feed {
+  flex: 1;
+  padding-left: 10px;
+}
+.post-layout {
+  padding: 15px;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  text-align: right;
+}
+.post-layout textarea {
+  height: 100px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+.post-list {
+  padding-top: 50px;
+}
+.post-li {
+  list-style-type: none;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.post-li .post-header {
+  background: darkgreen;
+  display: flex;
+  color: white;
+  padding: 0 1rem;
+  height: 40px;
+  line-height: 40px;
+}
+.post-li .post-header button {
+  color: white;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+}
+.post-li .post-header-user {
+  flex: 1;
+}
+.post-li .post-header-user img {
+  border-radius: 1.5rem;
+  margin: 0.5rem;
+  width: 30px;
+  height: 30px;
+}
+.post-li .post-content {
+  padding: 1.5rem;
+}
+.post-li .post-content textarea {
+  width: 100%;
+  height: 50px;
+}
+
+@media (max-width: 800px) {
+  .main-content {
+    flex-direction: column;
+  }
+  .user-info {
+    width: auto;
+    padding-right: 0px;
+    margin-bottom: 10px;
+  }
+  .user-info .avatar {
+    border: 0 none;
+  }
+  .feed {
+    padding-left: 0;
+  }
+  .post-li .post-header {
+    line-height: 20px;
+  }
+  .post-li .post-header-user img {
+    float: left;
+  }
+}
+.login {
+  display: flex;
+  min-height: 100vh;
+  background: url(imagens/background.jpg) no-repeat;
+  background-size: cover;
   align-items: center;
-  margin: 5px;
 }
-.form-login input{
-  margin: 5px;
+.login-content {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.9);
+  max-width: 300px;
   text-align: center;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px #666;
 }
-.form-login button{
-  margin: 5px;
-  text-align: center;
+.login-logo {
+  width: 150px;
 }
-.text-main{
-  text-align: center;
+.login-content h4 {
+  padding-bottom: 2rem;
 }
-.image-logo{
-  align-items: center;
-}
-.post-li{
-  margin-top: 5px;
-  text-align: center;
+.login-form {
+  padding: 0 20px;
 }

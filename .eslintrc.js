@@ -12,7 +12,7 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
     firebase: 'readonly',
   },
-  plugins: ['jest'],
+  plugins: ['prettier', 'jest'],
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
@@ -27,5 +27,6 @@ module.exports = {
     'jest/no-identical-title': 'error',
     'jest/prefer-to-have-length': 'warn',
     'jest/valid-expect': 'error',
+    'prettier/prettier': ['error']
   },
 };

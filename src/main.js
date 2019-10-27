@@ -7,11 +7,12 @@ function init() {
 }
 
 function locationHasChange() {
-  firebase.auth().onAuthStateChanged((user) => {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       window.user = {
+        displayName: user.displayName,
         email: user.email,
-        uid: user.uid,
+        uid: user.uid
       };
       window.location.hash = '#feed';
       document.querySelector('main').innerHTML = feed();
